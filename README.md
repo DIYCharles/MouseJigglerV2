@@ -20,7 +20,7 @@ Table of contents
    * [Why](#Why)
    * [Build](#Build)
    * [QMK Firmware](#QMK-Firmware)
-   * [Randomizing Input (work in progress)](#Randomizing-Input-(work-in-progress))
+   * [Randomizing Input work in progress](#Randomizing-Input-work-in-progress)
    * [Compile And Flash](#Compile-And-Flash)
 <!--te-->
 
@@ -91,7 +91,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 ```
 
-Randomizing Input (work in progress)
+Randomizing Input work in progress
 =====
 Currently trying to find a way to randomize the code. My thoughts are to use a counter and only execute that code when the counter is divisable by small prime numbers. If anyone wants to help please do.
 ```c
