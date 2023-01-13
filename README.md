@@ -1,7 +1,9 @@
 MouseJiggler V2
 =========
-
 This is a build of a HID emulating device that will continuously move the mouse to keep the computer from sleeping as well as preserve the online status of applications. It uses an Arduino Pro Micro and QMK Firmware. 
+
+All the functionality here can be added to your existing QMK keyboard. If you are interested read the guide at the bottom. The main part of this guide is about the stand alone device that demonstrates this functionality.
+
 
 ### New Features
 This second version has no buttons and will always run when plugged in. The new code makes it so the movements are so small that you can use your computer with the MouseJiggler running and it is impossible to notice.
@@ -13,15 +15,16 @@ This second version has no buttons and will always run when plugged in. The new 
  <img src="https://raw.githubusercontent.com/DIYCharles/MouseJigglerV2/main/photos/pic4.JPG" style="max-width:49%;" />  <img src="https://raw.githubusercontent.com/DIYCharles/MouseJigglerV2/main/photos/pic3.JPG" style="max-width:49%;" />
 
 
-Table of contents
+Table of contents 
 =================
 
 <!--ts-->
    * [Why](#Why)
-   * [Build](#Build)
    * [QMK Firmware](#QMK-Firmware)
    * [Randomizing Input work in progress](#Randomizing-Input-work-in-progress)
    * [Compile And Flash](#Compile-And-Flash)
+   * [Build](#Build)
+   * [How to add a MouseJiggler toggle macro to your QMK keyboard](#How-to-add-a-MouseJiggler-toggle-macro-to-your-QMK-keyboard)
 <!--te-->
 
 Why
@@ -133,3 +136,69 @@ The pro-micro I am using has a USB type C port and I got it for $5 on aliexpress
 
 The 3D printing files for the case are incredibly thin and are designed for the type c pro micro. 
  <img src="https://raw.githubusercontent.com/DIYCharles/MouseJigglerV2/main/photos/pic1.JPG" style="max-width:49%;" /> <img src="https://raw.githubusercontent.com/DIYCharles/MouseJigglerV2/main/photos/pic2.JPG" style="max-width:49%;" />
+
+
+How to add a MouseJiggler toggle macro to your QMK keyboard
+============
+
+Here is how you can add the functionality of a MouseJiggler to your QMK keyboard by using a macro to toggle it. This is all done in the keymap.c of your keyboards qmk firmware file.
+
+
+First you want to declare the macro just like any other macro
+
+```
+enum custom_keycodes {
+  MOUSEJIGGLERMACRO
+};
+```
+Next we set the jiggle mode to off by default and declare the boolean we are going to use.
+
+```
+bool mouse_jiggle_mode = false;
+```
+In your keymap assign the key you want to use as the macro toggle like any other macro. I'd suggest putting this on a different layer than default. 
+```
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+	KEYMAP(
+		MOUSEJIGGLERMACRO)
+
+};
+```
+Where you normally define your macros we are going to have a function that will invert the boolean when you click the macro key.
+
+```
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case MOUSEJIGGLERMACRO:
+      if (record->event.pressed) {
+        if (mouse_jiggle_mode)
+            SEND_STRING(SS_DELAY(15));
+            mouse_jiggle_mode = false;
+        } else {
+            SEND_STRING(SS_DELAY(15));
+            mouse_jiggle_mode = true;
+        }
+      } else {
+      }
+      break;
+  }
+  return true;
+}
+```
+Finally we have a function that is not normally declared in the keymap. This function scans the keyboards matrix really fast continuously. So if we stick and if statement in there that reads the boolean from our macro we can have a set of code that will perform on loop until the macro inverts the boolean again.
+
+
+```
+void matrix_scan_user(void) {
+  if (mouse_jiggle_mode) {
+    SEND_STRING(SS_DELAY(10));
+    tap_code(KC_MS_UP);
+    tap_code(KC_MS_DOWN);
+    SEND_STRING(SS_DELAY(30));
+    tap_code(KC_MS_LEFT);
+    tap_code(KC_MS_RIGHT);
+  } else { 
+  } 
+}
+```
