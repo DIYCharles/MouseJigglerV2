@@ -146,18 +146,18 @@ Here is how you can add the functionality of a MouseJiggler to your QMK keyboard
 
 First you want to declare the macro just like any other macro
 
-```
+```c
 enum custom_keycodes {
   MOUSEJIGGLERMACRO
 };
 ```
 Next we set the jiggle mode to off by default and declare the boolean we are going to use.
 
-```
+```c
 bool mouse_jiggle_mode = false;
 ```
 In your keymap assign the key you want to use as the macro toggle like any other macro. I'd suggest putting this on a different layer than default. 
-```
+```c
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	KEYMAP(
@@ -167,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ```
 Where you normally define your macros we are going to have a function that will invert the boolean when you click the macro key.
 
-```
+```c
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case MOUSEJIGGLERMACRO:
@@ -189,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 Finally we have a function that is not normally declared in the keymap. This function scans the keyboards matrix really fast continuously. So if we stick and if statement in there that reads the boolean from our macro we can have a set of code that will perform on loop until the macro inverts the boolean again.
 
 
-```
+```c
 void matrix_scan_user(void) {
   if (mouse_jiggle_mode) {
     SEND_STRING(SS_DELAY(10));
