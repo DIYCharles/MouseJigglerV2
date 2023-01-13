@@ -20,6 +20,7 @@ Table of contents
    * [Why](#Why)
    * [Build](#Build)
    * [QMK Firmware](#QMK-Firmware)
+   * [Randomizing Input (work in progress)](#Randomizing-Input-(work-in-progress))
    * [Compile And Flash](#Compile-And-Flash)
 <!--te-->
 
@@ -87,6 +88,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+}
+```
+
+Randomizing Input (work in progress)
+=====
+Currently trying to find a way to randomize the code. My thoughts are to use a counter and only execute that code when the counter is divisable by small prime numbers. If anyone wants to help please do.
+```c
+int counter;
+int c1;
+int c2;
+
+void matrix_scan_user(void) {
+  //The purpose of the counter is to try and randomize the movements. If you do not want random movements comment this out and uncomment the part out below. 
+  counter = counter + 1;
+  SEND_STRING(SS_DELAY(1));
+  c1 = counter % 13;
+  c2 = counter % 37;
+  if (c1 == 0) {
+    SEND_STRING(SS_DELAY(10000));
+    tap_code(KC_MS_UP);
+    tap_code(KC_MS_DOWN);
+  }
+  if (c2 == 0) {
+    SEND_STRING(SS_DELAY(30000));
+    tap_code(KC_MS_LEFT);
+    tap_code(KC_MS_RIGHT);
+  }
+  if (counter == 1000) {
+    counter = 0;
+  }
 }
 ```
 
