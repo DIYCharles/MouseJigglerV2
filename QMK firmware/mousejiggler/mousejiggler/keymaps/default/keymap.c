@@ -19,12 +19,15 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
+  // if (mouse_jiggle_mode) { //Uncomment if you want to add a physical toggle switch to control it via the macro
   SEND_STRING(SS_DELAY(10000));
   tap_code(KC_MS_UP);
   tap_code(KC_MS_DOWN);
   SEND_STRING(SS_DELAY(30000));
   tap_code(KC_MS_LEFT);
   tap_code(KC_MS_RIGHT);
+  // } else { //Uncomment if you want to add a physical toggle switch to control it via the macro
+  // } //Uncomment if you want to add a physical toggle switch to control it via the macro
 }
 
 
