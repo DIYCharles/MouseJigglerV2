@@ -1,12 +1,14 @@
 {
-  "keyboard_name": "mousejiggler",
-  "url": "",
-  "maintainer": "DIYCharles",
-  "width": 1,
-  "height": 1,
+  "keyboard_name": "Microsoft Wired Keyboard",
+  "manufacturer": "Microsoft Corporation",
+  "maintainer": "Microsoft Corporation",
+  "usb": {
+      "vid": "0x045e",
+      "pid": "0x0752"
+  },
   "layouts": {
-      "KEYMAP": {
-          "layout": [{"x":0, "y":0}]
-      }
+    "LAYOUT_1x1": {
+      "layout": [{"x":0, "y":0}]
+    }
   }
 }

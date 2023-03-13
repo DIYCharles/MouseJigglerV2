@@ -1,4 +1,4 @@
-#include "mousejiggler.h" 
+#include MOUSEJIGGLER_H 
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -13,9 +13,9 @@ int c2;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-	KEYMAP(
-		MOUSEJIGGLERMACRO)
-
+	[0] = LAYOUT_1x1 (
+		MOUSEJIGGLERMACRO
+  )
 };
 
 void matrix_init_user(void) {
